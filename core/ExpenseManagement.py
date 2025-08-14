@@ -30,7 +30,7 @@ async def create_expense(
 
 
 
-@app.put("/edit_expense/{id}")
+@app.put("/edit_expense/")
 async def edit_expense(
     id:int = Body(...),
     description: str | None = Body(None),
