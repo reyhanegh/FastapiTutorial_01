@@ -2,11 +2,6 @@ from pydantic import BaseModel, field_validator, Field, field_serializer
 from typing import Optional, List
 
 
-Expenses = [
-    {"id":1, "description":"buy ", "amount":125.6},
-]
-
-
 class ExpenseSchema(BaseModel):
     id: int
     description: str
