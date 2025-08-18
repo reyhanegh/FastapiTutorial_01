@@ -25,7 +25,7 @@ async def create_expense(
     description: str = Body(...),
     amount: float = Body(...)
      ):
-    Expenses.append({"id":len(Expenses)+1,"description":description, "amount":amount})
+    Expenses.append({"id":max((e.id for e in Expenses), default=0) + 1,"description":description, "amount":amount})
     return Expenses[-1]
 
 
