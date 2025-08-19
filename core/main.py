@@ -20,7 +20,7 @@ async def root():
 @app.get("/expense/{id}", response_model=ExpenseSchema, status_code=status.HTTP_200_OK)
 async def get_expense_byId(id:int):
     for e in Expenses:
-        if(e["id"] == id):
+        if(e.id == id):
             return e
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="object not found")
 
@@ -32,14 +32,18 @@ async def create_expense(expense: ExpenseCreate ):
     Expenses.append(new_expense)
     return new_expense
 
-@app.put("/edit_expense/", response_model=ExpenseSchema)
-async def edit_expense(update_data: ExpenseUpdate ):
+@app.patch("/edit_expense/", response_model=ExpenseSchema)
+async def edit_expense(id:int, update_data: ExpenseUpdate ):
+
+    update_data = update_data.model_dump(exclude_unset=True)
+
     for e in Expenses:
-        if e["id"] == update_data.id:
-            if update_data.description is not None :
-                e['description'] = update_data.description
-            if update_data.amount is not None :
-                e['amount'] = update_data.amount
+        if e.id == id:
+            for key, value in update_data.items():
+                if isinstance(value, str) and value.strip() == "":
+                    continue
+                if value is not None:
+                    setattr(e, key, value)
             return e
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="object not found")
 
@@ -48,7 +52,7 @@ async def edit_expense(update_data: ExpenseUpdate ):
 @app.delete("/delete_expense/{id}")
 def delete_expense(id: int):
     for i, n in enumerate(Expenses):
-        if n["id"] == id:
+        if n.id == id:
             del Expenses[i]
             return {"message": f"Name with ID {id} deleted successfully"}
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="object not found")

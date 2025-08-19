@@ -13,15 +13,13 @@ class ExpenseSchema(BaseModel):
 
 
 class ExpenseCreate(BaseModel):
-    description: str 
-    amount : float = Field(gt=0)
-
-    
+    description: str = Field( max_length=100)
+    amount : float = Field(ge=0)
+   
 
 
 class ExpenseUpdate(BaseModel):
-    id: int = Field(...)
-    description: Optional[str] 
-    amount : Optional[float] = Field(gt=0)
+    description: Optional[str] =Field(max_length=100)
+    amount : Optional[float] = Field(ge=0)
 
 
