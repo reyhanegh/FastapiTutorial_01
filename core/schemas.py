@@ -1,5 +1,6 @@
 from pydantic import BaseModel, field_validator, Field, field_serializer
-from typing import Optional, List
+from typing import Optional
+import re
 
 class baseExpenseShema(BaseModel):
     description: str = Field(..., description="Purpose of expense", max_length=100)
@@ -13,6 +14,8 @@ class baseExpenseShema(BaseModel):
     def validate_description(self,value: str):
         if len(value)>100:
             raise ValueError("description must not exceed 100 characters")
+        if not re.match(r"^[A-Za-z0-9\s.,-]+$", value):
+            raise ValueError("Description can only contain letters, numbers, spaces, and basic punctuation")
         return value
     
 
@@ -37,6 +40,8 @@ class ExpenseUpdateSchema(BaseModel):
     def validate_description(self,value: str):
         if len(value)>100:
             raise ValueError("description must not exceed 100 characters")
+        if not re.match(r"^[A-Za-z0-9\s.,-]+$", value):
+            raise ValueError("Description can only contain letters, numbers, spaces, and basic punctuation")
         return value
 
 
