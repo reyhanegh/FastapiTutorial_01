@@ -10,8 +10,9 @@ class baseExpenseShema(BaseModel):
     def serialize_float(self, value: float):
         return round(value, 2)
     
-    @field_validator("description")
-    def validate_description(self,value: str):
+    @field_validator("description",  mode = 'after' )    
+    @classmethod
+    def validate_description(cls,value: str):
         if len(value)>100:
             raise ValueError("description must not exceed 100 characters")
         if not re.match(r"^[A-Za-z0-9\s.,-]+$", value):
@@ -36,8 +37,9 @@ class ExpenseUpdateSchema(BaseModel):
     def serialize_float(self, value: float):
         return round(value, 2)
     
-    @field_validator("description")
-    def validate_description(self,value: str):
+    @field_validator("description" )
+    @classmethod
+    def validate_description(cls,value: str):
         if len(value)>100:
             raise ValueError("description must not exceed 100 characters")
         if not re.match(r"^[A-Za-z0-9\s.,-]+$", value):
